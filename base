@@ -1,0 +1,395 @@
+#include <stdio.h>
+#include <locale.h>
+#include <time.h>
+#include <conio.h>
+#include <windows.h>
+#include <stdlib.h>
+#define COR1 1
+#define COR2 2
+#define COR3 4
+#define COR4 6
+#define CORPADRAO 15
+
+void textoColorido(char *texto, int jogador) {
+    HANDLE hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    switch(jogador) {
+        case 1: SetConsoleTextAttribute(hConsole, COR1); break;
+        case 2: SetConsoleTextAttribute(hConsole, COR2); break;
+        case 3: SetConsoleTextAttribute(hConsole, COR3); break;
+        case 4: SetConsoleTextAttribute(hConsole, COR4); break;
+    }
+    printf("%s",texto);
+    SetConsoleTextAttribute(hConsole, CORPADRAO);
+}
+
+struct tabuleiro{
+int altura;
+int jogador;
+};
+
+typedef struct{
+int cor;
+int contpecas;
+int soma;
+} jogador;
+
+
+void textcolor(int cor){
+    static int __BACKGROUND;
+    HANDLE h = GetStdHandle ( STD_OUTPUT_HANDLE );
+    CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+    GetConsoleScreenBufferInfo(h, &csbiInfo);
+    SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),cor + (__BACKGROUND << 4));}
+
+void limpatela(){
+    system("cls");}
+
+void voltar(){
+    printf("\n\nPressione qualquer tecla para voltar ao menu  ");
+    getch();
+    limpatela();}
+
+int main(){
+    setlocale(LC_ALL, "");
+int opcmenu=1, opcjogar, casa, i;
+
+while(opcmenu !=4){
+    limpatela();
+    printf(" ----------------------------- JOGO CAPPUCCINO ----------------------------- ");
+    printf("\n\n 1 - Jogar ");
+    printf("\n 2 - Regras ");
+    printf("\n 3 - Créditos ");
+    printf("\n 4 - Sair ");
+    printf("\n\n Opcao: ");
+    scanf("%d",&opcmenu);
+switch(opcmenu){
+case 1: {
+    limpatela();
+    while(opcjogar!=999){
+        printf(" ----------------------------- JOGO CAPPUCCINO ----------------------------- ");
+        printf("\n\n 1 - Nova Partida");
+        printf("\n 2 - Carregar Partida");
+        printf("\n 3 - Replay");
+        printf("\n 4 - Voltar ao menu");
+        printf("\n\nOpção: ");
+        scanf("%d", &opcjogar);
+        if(opcjogar==1){
+            int fim=1;
+            while(fim != 999){
+            limpatela();
+            textcolor(15);
+
+//imprimindo o tabuleiro
+int i, j, aleatorio;
+int cont[4]={5,5,5,5};
+srand((unsigned)time(NULL));
+struct tabuleiro matriz[5][5];
+
+for(i=0; i<5 ;i++){
+    for(j=0; j<5 ; j++){
+        if((i==0&&j==0)||(i==0&&j==4)||(i==2&&j==2)||(i==4&&j==0)||(i==4&&j==4)){
+        matriz[i][j].altura=0;}
+        else{
+        matriz[i][j].altura=1;}}}
+
+for(i=0; i<5 ;i++){
+    for(j=0; j<5 ; j++){
+        if((i==0&&j==0)||(i==0&&j==4)||(i==2&&j==2)||(i==4&&j==0)||(i==4&&j==4)){
+                matriz[i][j].jogador=9;}
+        else{
+        aleatorio=(rand()%4);
+        while(cont[aleatorio]==0){
+        aleatorio=(rand()%4);}
+        matriz[i][j].jogador=aleatorio;
+        cont[aleatorio]--;}}}
+
+printf("    1    2    3    4    5");
+for(i=0; i<5 ;i++){
+        textcolor(15);
+        printf("\n %c", 97+i);
+    for(j=0; j<5 ; j++){
+textcolor(matriz[i][j].jogador+1);
+if(matriz[i][j].jogador==9){
+    textcolor(15);}
+printf("| %d |", matriz[i][j].altura);}}
+//terminar de imprimir o tabuleiro
+
+
+char peca[3];
+int movimento;
+int li, co,x, turno=0, partida=1;
+
+do{
+int conta=0;
+limpatela();
+textcolor(15);
+printf("    1    2    3    4    5");
+for(i=0; i<5 ;i++){
+        textcolor(15);
+        printf("\n %c", 97+i);
+    for(j=0; j<5 ; j++){
+textcolor(matriz[i][j].jogador+1);
+if(matriz[i][j].jogador==9){
+    textcolor(15);}
+printf("| %d |", matriz[i][j].altura);}}
+
+do{
+textcolor(turno+1);
+printf("\n\nTurno do jogador: %d", turno+1);
+printf("\nEscolha a peça: ");
+scanf("%s", &peca);
+li=peca[0]-97;
+co=peca[1]-49;
+
+textcolor(15);
+}while((li>5)||(co>5)||(matriz[li][co].jogador!=turno));
+int mo1,mo2,mo3,mo4,mo6,mo7,mo8,mo9;
+if((matriz[li-1][co-1].altura>0)&&(matriz[li-1][co-1].altura<=matriz[li][co].altura)){
+        if((li-1<0)||(co-1<0)||(li-1>4)||(co-1>4)){ }
+        else{
+    conta++;
+    mo7=1;
+    printf("\nválido 7");}}
+if((matriz[li-1][co].altura>0)&&(matriz[li-1][co].altura<=matriz[li][co].altura)){
+        if((li-1<0)||(co<0)||(li-1>4)||(co>4)){ }
+        else{
+    conta++;
+    mo8=1;
+    printf("\nválido 8");}}
+if((matriz[li-1][co+1].altura>0)&&(matriz[li-1][co+1].altura<=matriz[li][co].altura)){
+        if((li-1<0)||(co+1<0)||(li-1>4)||(co+1>4)){ }
+        else{
+    conta++;
+    mo9=1;
+    printf("\nválido 9");}}
+if((matriz[li][co-1].altura>0)&&(matriz[li][co-1].altura<=matriz[li][co].altura)){
+        if((li<0)||(co-1<0)||(li>4)||(co-1>4)){ }
+        else{
+    conta++;
+    mo4=1;
+    printf("\nválido 4");}}
+if((matriz[li][co+1].altura>0)&&(matriz[li][co+1].altura<=matriz[li][co].altura)){
+        if((li<0)||(co+1<0)||(li>4)||(co+1>4)){ }
+        else{
+    conta++;
+    mo6=1;
+    printf("\nválido 6");}}
+if((matriz[li+1][co-1].altura>0)&&(matriz[li+1][co-1].altura<=matriz[li][co].altura)){
+        if((li+1<0)||(co-1<0)||(li+1>4)||(co-1>4)){ }
+        else{
+    conta++;
+    mo1=1;
+    printf("\nválido 1");}}
+if((matriz[li+1][co].altura>0)&&(matriz[li+1][co].altura<=matriz[li][co].altura)){
+        if((li+1<0)||(co<0)||(li+1>4)||(co>4)){ }
+        else{
+    conta++;
+    mo2=1;
+    printf("\nválido 2");}}
+if((matriz[li+1][co+1].altura>0)&&(matriz[li+1][co+1].altura<=matriz[li][co].altura)){
+    if((li+1<0)||(co+1<0)||(li+1>4)||(co+1>4)){ }
+        else{
+    conta++;
+    mo3=1;
+    printf("\nválido 3");}}
+
+printf("\nmovimentos possiveis: %d\n", conta);
+textcolor(turno+1);
+int jogada=0;
+do{
+textcolor(15);
+printf("Movimento: ");
+scanf("%d", &movimento);
+//se digitar 7
+   if(movimento==7 && mo7==1){
+        if((matriz[li-1][co-1].altura>0)&&(matriz[li-1][co-1].altura<=matriz[li][co].altura)){
+                if((li-1<0)||(co-1<0)||(li-1>4)||(co-1>4)){ }
+                matriz[li][co].jogador = 9;
+                matriz[li-1][co-1].altura = (matriz[li][co].altura) + (matriz[li-1][co-1].altura);
+                matriz[li][co].altura = 0;
+                matriz[li-1][co-1].jogador = turno;
+                printf("Atual altura da sua peça: %d", matriz[li-1][co-1].altura);
+                movimento=0;
+                mo7=0;
+                jogada=1;}}
+ //se digitar 8
+    else if(movimento==8 && mo8==1){
+            if((matriz[li-1][co].altura>0)&&(matriz[li-1][co].altura<=matriz[li][co].altura)){
+                    if((li-1<0)||(co<0)||(li-1>4)||(co>4)){ }
+            matriz[li][co].jogador=9;
+            matriz[li-1][co].altura= (matriz[li][co].altura) + (matriz[li-1][co].altura);
+            matriz[li][co].altura=0;
+            matriz[li-1][co].jogador=turno;
+            printf("Atual altura da sua peça: %d", matriz[li-1][co].altura);
+            movimento=0;
+            mo8=0;
+            jogada=1;}}
+//se digitar 9
+    else if(movimento==9 && mo9==1){
+            if((matriz[li-1][co+1].altura>0)&&(matriz[li-1][co+1].altura<=matriz[li][co].altura)){
+                    if((li-1<0)||(co+1<0)||(li-1>4)||(co+1>4)){ }
+            matriz[li][co].jogador=9;
+            matriz[li-1][co+1].altura= (matriz[li][co].altura) + (matriz[li-1][co+1].altura);
+            matriz[li][co].altura=0;
+            matriz[li-1][co+1].jogador=turno;
+            printf("Atual altura da sua peça: %d", matriz[li-1][co+1].altura);
+            mo9=0;
+            movimento=0;
+            jogada=1;}}
+//se digitar 4
+    else if(movimento==4 && mo4==1){
+            if((matriz[li][co-1].altura>0)&&(matriz[li][co-1].altura<=matriz[li][co].altura)){
+                    if((li<0)||(co-1<0)||(li>4)||(co-1>4)){ }
+                matriz[li][co].jogador=9;
+                matriz[li][co-1].altura= (matriz[li][co].altura) + (matriz[li][co-1].altura);
+                matriz[li][co].altura=0;
+                matriz[li][co-1].jogador=turno;
+                printf("Atual altura da sua peça: %d", matriz[li][co-1].altura);
+                mo4=0;
+                movimento=0;
+                jogada=1;}}
+//se digitar 6
+    else if(movimento==6 && mo6==1){
+            if((matriz[li][co+1].altura>0)&&(matriz[li][co+1].altura<=matriz[li][co].altura)){
+                    if((li<0)||(co+1<0)||(li>4)||(co+1>4)){ }
+                matriz[li][co].jogador=9;
+                matriz[li][co+1].altura= (matriz[li][co].altura) + (matriz[li][co+1].altura);
+                matriz[li][co].altura=0;
+                matriz[li][co+1].jogador=turno;
+                printf("Atual altura da sua peça: %d", matriz[li][co+1].altura);
+                mo6=0;
+                movimento=0;
+                jogada=1;}}
+//se digitar 1
+    else if(movimento==1 && mo1==1){
+            if((matriz[li+1][co-1].altura>0)&&(matriz[li+1][co-1].altura<=matriz[li][co].altura)){
+                    if((li+1<0)||(co-1<0)||(li+1>4)||(co-1>4)){ }
+                matriz[li][co].jogador=9;
+                matriz[li+1][co-1].altura= (matriz[li][co].altura) + (matriz[li+1][co-1].altura);
+                matriz[li][co].altura=0;
+                matriz[li+1][co-1].jogador=turno;
+                printf("Atual altura da sua peça: %d", matriz[li+1][co-1].altura);
+                mo1=0;
+                movimento=0;
+                jogada=1;}}
+//se digitar 2
+    else if(movimento==2 && mo2==1){
+            if((matriz[li+1][co].altura>0)&&(matriz[li+1][co].altura<=matriz[li][co].altura)){
+                    if((li+1<0)||(co<0)||(li+1>4)||(co>4)){ }
+                matriz[li][co].jogador=9;
+                matriz[li+1][co].altura= (matriz[li][co].altura) + (matriz[li+1][co].altura);
+                matriz[li][co].altura=0;
+                matriz[li+1][co].jogador=turno;
+                printf("Atual altura da sua peça: %d", matriz[li+1][co].altura);
+                mo2=0;
+                movimento=0;
+                jogada=1;}}
+//se digitar 3
+   else if(movimento==3 && mo3==1){
+        if((matriz[li+1][co+1].altura>0)&&(matriz[li+1][co+1].altura<=matriz[li][co].altura)){
+                if((li+1<0)||(co+1<0)||(li+1>4)||(co+1>4)){ }
+                matriz[li][co].jogador=9;
+                matriz[li+1][co+1].altura= (matriz[li][co].altura) + (matriz[li+1][co+1].altura);
+                matriz[li][co].altura=0;
+                matriz[li+1][co+1].jogador=turno;
+                printf("\nAtual altura da sua peça: %d", matriz[li+1][co+1].altura);
+                mo3=0;
+                movimento=0;
+                jogada=1;}}
+    else{}
+
+}while(jogada!=1);
+
+
+
+
+
+
+
+
+printf("\nPressione qualquer tecla para passar a vez");
+getch();
+if(turno<3){
+    turno++;}
+else{
+    turno=0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}while(partida==1);
+
+//
+            voltar();
+            break;
+            }}
+        else if(opcjogar==2){
+            limpatela();
+            printf("Você escolheu carregar uma partida");
+            voltar();}
+        else if(opcjogar==3){
+            limpatela();
+            printf("Você escolheu ver o replay da partida");
+            voltar();}
+        else if(opcjogar==4)
+            voltar();
+    break;}
+    break;}
+case 2: {
+    limpatela();
+    printf(" ----------------------------- JOGO CAPPUCCINO ----------------------------- ");
+    printf("\n\n ---------------------------------- Regras -------------------------------");
+    printf("\n\n    - Cappuccino é um jogo abstrato para até quatro jogadores cujo\n      objetivo é ter a maior quantidade de pilhas sobre \n      seu domínio ao final da partida\n");
+    printf("\n    - Só pode mover a peça para casas adjacentes");
+    printf("\n    - Caso o espaço esteja vazio, não é possível realizar o movimento");
+    printf("\n    - Caso o espaço tenha uma peça, ele só poderá se mover \n      se a peça tiver altura igual ou inferior à sua");
+    printf("\n    - Em caso de empates, será uasada a ordem do turno inversa para desempatar\n\n");
+    textcolor(1);
+    printf("\n    - Jogador 1 = ");
+    printf("AZUL");
+    textcolor(2);
+    printf("\n    - Jogador 2 = ");
+    printf("VERDE");
+    textcolor(3);
+    printf("\n    - Jogador 3 = ");
+    printf("CIANO");
+    textcolor(4);
+    printf("\n    - Jogador 4 = ");
+    printf("VERMELHO");
+    textcolor(15);
+
+    voltar();
+    break;}
+case 3:{
+    limpatela();
+    printf(" ----------------------------- JOGO CAPPUCCINO ----------------------------- ");
+    printf("\n\n------------------- Projeto de introdução à programação --------------------");
+    printf("\n------------------------ Jogo Cappuccino Adaptado --------------------------");
+    printf("\n\nDocente: Roberto Hugo Wanderley Pinheiro");
+    printf("\nDiscente: Camila Vanessa de Matos Sousa");
+    voltar();
+    break;}
+case 4:
+    return 0;}}}
